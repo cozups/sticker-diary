@@ -23,6 +23,7 @@ export default function SiteHeader() {
       ) : (
         <>
           <Link href={'/login'}>로그인</Link>
+          <Link href={'/join'}>회원가입</Link>
         </>
       )}
     </div>
