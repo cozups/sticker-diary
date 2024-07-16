@@ -1,6 +1,8 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { compare } from 'bcrypt';
+import { prisma } from '@/app/lib/prisma';
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -11,12 +13,31 @@ const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'credentials',
       credentials: {
-        email: { label: 'Email', type: 'text' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: 'email', type: 'text' },
+        password: { label: 'password', type: 'password' },
       },
-      authorize: async (credentials, req) => {
-        console.log(req);
-        return null;
+      authorize: async (credentials) => {
+        const { email, password } = credentials as {
+          email: string;
+          password: string;
+        };
+        const user = await prisma.user.findUnique({
+          where: {
+            email,
+          },
+        });
+
+        if (!user) {
+          throw new Error('User Not Found');
+        }
+
+        const isMatch = await compare(password, user.password);
+
+        if (!isMatch) {
+          throw new Error('Password is wrong.');
+        }
+
+        return user;
       },
     }),
   ],

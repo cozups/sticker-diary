@@ -6,8 +6,6 @@ import { signOut, useSession } from 'next-auth/react';
 export default function SiteHeader() {
   const { data: session, status } = useSession();
 
-  console.log(session);
-
   return (
     <div className="flex items-center">
       <Link href="/" className="text-4xl font-black">

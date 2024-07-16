@@ -1,6 +1,5 @@
-import { SHA256 } from 'crypto-js';
+import { hash } from 'bcrypt';
 import { prisma } from '@/app/lib/prisma';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -12,7 +11,7 @@ export async function POST(req: NextRequest) {
       data: {
         name,
         email,
-        password: hashPassword(password),
+        password: await hash(password, 12),
         image: '',
       },
     });
@@ -22,8 +21,4 @@ export async function POST(req: NextRequest) {
     console.error('Error creating user:', error);
     return NextResponse.json({ error }, { status: 500 });
   }
-}
-
-function hashPassword(password: string) {
-  return SHA256(password).toString();
 }
