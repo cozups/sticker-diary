@@ -8,8 +8,8 @@ import SessionWrapper from '@components/SessionWrapper';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: '덕질일기',
-  description: '최애를 보고 온 날을 기록합시다.',
+  title: '스티커 일기',
+  description: '스티커 일기를 써봅시다',
 };
 
 export default function RootLayout({
