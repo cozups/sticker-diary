@@ -24,6 +24,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export function hashPassword(password: string) {
+function hashPassword(password: string) {
   return SHA256(password).toString();
 }
