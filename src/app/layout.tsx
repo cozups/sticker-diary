@@ -18,14 +18,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SessionWrapper>
-      <html lang="en">
-        <body className={inter.className}>
+    <html lang="en">
+      <body className={inter.className}>
+        <SessionWrapper>
           <SiteHeader />
-          {children}
+          <div className="rounded-xl h-screen mx-8">{children}</div>
           <SiteFooter />
-        </body>
-      </html>
-    </SessionWrapper>
+        </SessionWrapper>
+      </body>
+    </html>
   );
 }

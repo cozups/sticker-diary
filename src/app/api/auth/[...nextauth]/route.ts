@@ -41,6 +41,21 @@ const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, trigger, session }) {
+      if (trigger === 'update') {
+        return { ...token, ...session.user };
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user && token) {
+        session.user.name = token.name;
+        session.user.email = token.email;
+      }
+      return session;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);
