@@ -41,6 +41,7 @@ export default function Edit() {
   const onSubmit: SubmitHandler<EditFormInput> = async (
     data: EditFormInput
   ) => {
+    data.image = session?.user?.image || '';
     const res = await fetch('/api/profile', {
       method: 'PATCH',
       headers: {
@@ -54,7 +55,9 @@ export default function Edit() {
 
     if (imageInputRef.current?.files?.length) {
       const imageFile: File = imageInputRef.current.files[0];
+      const prevProfileImage = session?.user?.image;
 
+      // upload image
       const formData = new FormData();
       formData.append('email', session?.user?.email || '');
       formData.append('image', imageFile);
@@ -67,6 +70,17 @@ export default function Edit() {
       const { url } = await uploadImageResponse.json();
 
       data.image = url;
+
+      // delete previous image
+      const deleteImageResponse = await fetch('/api/images', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: prevProfileImage,
+        }),
+      });
     }
 
     const newSession = {
