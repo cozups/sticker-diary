@@ -3,7 +3,7 @@ import Landing from './components/Landing';
 
 export default function Home() {
   return (
-    <main className="w-full">
+    <main className="w-full h-full">
       <Landing />
     </main>
   );
