@@ -1,13 +1,11 @@
-'use client';
+import { auth } from '@/app/api/auth/[...nextauth]/route';
+import { redirect } from 'next/navigation';
 
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+export default async function Landing() {
+  const session = await auth();
 
-export default function Landing() {
-  const { data: session } = useSession();
-  const router = useRouter();
   if (session) {
-    router.push('/dashboard');
+    redirect('/dashboard');
   }
 
   return <div>Landing</div>;

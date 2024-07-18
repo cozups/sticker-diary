@@ -31,10 +31,10 @@ export default function LoginPage() {
       callbackUrl: '/',
     });
 
-    if (res?.error) {
-      // login failed.
-      console.error(res.error);
-    }
+    // if (res?.error) {
+    //   // login failed.
+    //   console.error(res.error);
+    // }
   };
 
   const onGoogleLogin = () => {

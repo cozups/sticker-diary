@@ -41,8 +41,6 @@ export default function Edit() {
     await update(newSession);
 
     router.push('/');
-
-    console.log(await res.json());
   };
 
   return (
