@@ -18,12 +18,15 @@ export default function SiteHeader() {
             className="flex items-center justify-center gap-2"
             href="/profile"
           >
-            <Image
-              src={session.user?.image || '/default_profile.png'}
-              alt="profile"
-              width={30}
-              height={30}
-            />
+            <div className="rounded-full w-8 h-8 overflow-hidden">
+              <Image
+                src={session.user?.image || '/default_profile.png'}
+                alt="profile"
+                width={120}
+                height={120}
+                className="w-auto h-full object-cover"
+              />
+            </div>
             <p className="font-semibold">{session.user?.name}</p>
           </Link>
           <button
