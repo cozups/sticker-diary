@@ -1,8 +1,10 @@
-import { auth } from '@/app/api/auth/[...nextauth]/route';
-import { redirect } from 'next/navigation';
+'use client';
 
-export default async function Landing() {
-  const session = await auth();
+import { redirect } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+
+export default function Landing() {
+  const { data: session } = useSession();
 
   if (session) {
     redirect('/dashboard');
