@@ -34,6 +34,12 @@ export default function Profile() {
         {/* sticker */}
         <h1>내 스티커</h1>
       </div>
+      <Link
+        href="/profile/delete"
+        className="bg-red-700 text-white px-2 py-1 rounded-lg"
+      >
+        회원 탈퇴
+      </Link>
     </>
   );
 }

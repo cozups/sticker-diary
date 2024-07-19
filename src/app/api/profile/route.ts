@@ -20,3 +20,19 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  const { email } = await req.json();
+
+  try {
+    await prisma.user.delete({
+      where: {
+        email,
+      },
+    });
+  } catch (error) {
+    return NextResponse.json({ error: 'DELETE user failed.' }, { status: 500 });
+  }
+
+  return NextResponse.json({ result: 'DELETE user success' }, { status: 201 });
+}
