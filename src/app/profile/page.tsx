@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import CustomSticker from '../components/CustomSticker';
 
 export default function Profile() {
   const { data: session } = useSession();
@@ -30,13 +31,13 @@ export default function Profile() {
           수정하기
         </Link>
       </div>
-      <div className="border mt-8 w-full flex flex-col items-center">
-        {/* sticker */}
-        <h1>내 스티커</h1>
+      <div className="border mt-8 w-full flex flex-col items-center py-4">
+        <h1 className="font-bold text-2xl mb-4">내 스티커</h1>
+        <CustomSticker />
       </div>
       <Link
         href="/profile/delete"
-        className="bg-red-700 text-white px-2 py-1 rounded-lg"
+        className="bg-red-700 text-white px-2 py-1 rounded-lg mt-4"
       >
         회원 탈퇴
       </Link>
