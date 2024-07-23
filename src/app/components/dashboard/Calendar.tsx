@@ -1,4 +1,7 @@
 'use client';
+
+import { dateLoadingState, dateState, scheduleState } from '@/app/states';
+import { formatDate } from '@/app/utils';
 import {
   addMonths,
   format,
@@ -11,15 +14,33 @@ import {
   endOfWeek,
   isSameDay,
 } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
 } from 'react-icons/md';
+import { useRecoilState } from 'recoil';
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [dateLoading, setDateLoading] = useRecoilState(dateLoadingState);
+  const [selectedDate, setSelectedDate] = useRecoilState(dateState);
+  const [schedules, setSchedules] = useRecoilState(scheduleState);
+
+  useEffect(() => {
+    const fetchSchedules = async () => {
+      setDateLoading(true);
+      const response = await fetch(
+        `/api/schedules?date=${formatDate(currentDate)}`
+      );
+      const data = await response.json();
+
+      setSchedules(data);
+      setDateLoading(false);
+    };
+
+    fetchSchedules();
+  }, [currentDate, setSchedules, setDateLoading]);
 
   const renderHeader = () => {
     const dateFormat = 'yyyy년 M월';
@@ -90,6 +111,9 @@ export default function Calendar() {
       for (let i = 0; i < 7; i++) {
         formattedDate = format(day, dateFormat);
         const cloneDay = day;
+        const scheduleOfToday = schedules.filter((schedule) =>
+          isSameDay(schedule.date, day)
+        );
         days.push(
           <div
             key={day.toDateString()}
@@ -105,6 +129,11 @@ export default function Calendar() {
             }}
           >
             <span className="number">{formattedDate}</span>
+            {scheduleOfToday.map((schedule) => (
+              <div key={schedule.id} className="bg-orange-100 text-xs">
+                {schedule.title}
+              </div>
+            ))}
           </div>
         );
         day = addDays(day, 1);

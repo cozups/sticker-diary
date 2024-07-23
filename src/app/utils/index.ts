@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 export function createRandomString(length: number) {
   const chars =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -6,4 +8,10 @@ export function createRandomString(length: number) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return result;
+}
+
+export function formatDate(date: Date) {
+  const dateFormat = 'yyyy.MM.dd';
+
+  return format(date, dateFormat);
 }
