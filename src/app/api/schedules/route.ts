@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
   const session = await auth();
   const schedule = await req.json();
 
+  console.log(schedule.date);
+
   const result = await prisma.schedule.create({
     data: {
       ...schedule,

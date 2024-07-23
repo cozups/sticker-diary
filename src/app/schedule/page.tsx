@@ -3,9 +3,10 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import { dateState } from '../states';
-import { formatDate } from '../utils';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { getTimezoneOffset } from 'date-fns-tz';
+import { formatDate } from '../utils';
 
 interface Schedule {
   title: string;
@@ -26,7 +27,7 @@ export default function ScheduleForm() {
       },
       body: JSON.stringify({
         ...data,
-        date: date,
+        date: new Date(formatDate(date)),
       }),
     });
 

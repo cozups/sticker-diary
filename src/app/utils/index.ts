@@ -11,7 +11,7 @@ export function createRandomString(length: number) {
 }
 
 export function formatDate(date: Date) {
-  const dateFormat = 'yyyy.MM.dd';
+  const dateFormat = 'yyyy-MM-dd';
 
   return format(date, dateFormat);
 }
