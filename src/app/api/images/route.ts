@@ -1,64 +1,106 @@
+import { Bucket, s3 } from '@/app/lib/s3';
 import { prisma } from '@/app/lib/prisma';
-import {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-} from '@aws-sdk/client-s3';
+import { createRandomString } from '@/app/utils';
+import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { NextRequest, NextResponse } from 'next/server';
 
-function createRandomString(length: number) {
-  const chars =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-}
-
-const Bucket = process.env.AWS_BUCKET_NAME;
-const s3 = new S3Client({
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
-  region: process.env.AWS_REGION,
-});
-
 export async function POST(req: NextRequest) {
-  const formData = await req.formData();
-  const file: File = formData.get('image') as File;
-  const email = formData.get('email') as string;
-  const fileName = `IMG_${createRandomString(10)}`;
+  const url = new URL(req.url);
+  const searchParams = url.searchParams;
+  const target = searchParams.get('target');
 
-  if (!file) {
-    return NextResponse.json({ error: 'File is null.' }, { status: 400 });
+  if (target === 'profile') {
+    const formData = await req.formData();
+    const file: File = formData.get('image') as File;
+    const email = formData.get('email') as string;
+    const fileName = `IMG_${createRandomString(10)}`;
+
+    if (!file) {
+      return NextResponse.json({ error: 'File is null.' }, { status: 400 });
+    }
+
+    const fileBuffer = Buffer.from(await file.arrayBuffer());
+
+    const command = new PutObjectCommand({
+      Bucket,
+      Key: `${fileName}`,
+      Body: fileBuffer,
+    });
+    await s3.send(command);
+
+    const objectUrl = `https://${Bucket}.s3.amazonaws.com/${fileName}`;
+
+    await prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        image: objectUrl,
+      },
+    });
+
+    return NextResponse.json(
+      { result: 'Upload success.', url: objectUrl },
+      { status: 201 }
+    );
   }
 
-  const fileBuffer = Buffer.from(await file.arrayBuffer());
+  if (target === 'stickers') {
+    const formData = await req.formData();
+    const stickers: Record<string, string> = {};
+    const email = formData.get('email') as string;
 
-  const command = new PutObjectCommand({
-    Bucket,
-    Key: `${fileName}`,
-    Body: fileBuffer,
-  });
-  await s3.send(command);
+    const userData = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
 
-  const objectUrl = `https://${Bucket}.s3.amazonaws.com/${fileName}`;
+    const savedStickers = userData?.stickers as Record<string, string>;
 
-  await prisma.user.update({
-    where: {
-      email,
-    },
-    data: {
-      image: objectUrl,
-    },
-  });
+    // delete prevSticker and upload new sticker
+    for (const key of formData.keys()) {
+      if (key === 'email') continue;
 
-  return NextResponse.json(
-    { result: 'Upload success.', url: objectUrl },
-    { status: 201 }
-  );
+      // delete previous Sticker
+      const deleteKey = savedStickers[key]?.split('/').slice(-1)[0];
+      if (deleteKey) {
+        const deletePrevCommand = new DeleteObjectCommand({
+          Bucket,
+          Key: deleteKey,
+        });
+        await s3.send(deletePrevCommand);
+      }
+
+      // upload new Sticker
+      const file = formData.get(key) as File;
+      const fileName = `STK_${createRandomString(10)}`;
+      const fileBuffer = Buffer.from(await file.arrayBuffer());
+
+      const uploadCommand = new PutObjectCommand({
+        Bucket,
+        Key: `${fileName}`,
+        Body: fileBuffer,
+      });
+      await s3.send(uploadCommand);
+
+      const objectUrl = `https://${Bucket}.s3.amazonaws.com/${fileName}`;
+
+      stickers[key] = objectUrl;
+    }
+
+    // update sticker url to DB
+    const updated = await prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        stickers: { ...savedStickers, ...stickers },
+      },
+    });
+
+    return NextResponse.json(updated.stickers, { status: 201 });
+  }
 }
 
 export async function DELETE(req: NextRequest) {
@@ -83,3 +125,7 @@ export async function DELETE(req: NextRequest) {
     { status: 201 }
   );
 }
+
+async function uploadImageToS3(fileName: string, file: File, email: string) {}
+
+async function DeleteImageFromS3(fileName: string, file: File, email: string) {}

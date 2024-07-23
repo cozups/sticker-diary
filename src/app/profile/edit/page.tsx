@@ -62,7 +62,7 @@ export default function Edit() {
       formData.append('email', session?.user?.email || '');
       formData.append('image', imageFile);
 
-      const uploadImageResponse = await fetch('/api/images', {
+      const uploadImageResponse = await fetch('/api/images?target=profile', {
         method: 'POST',
         body: formData,
       });

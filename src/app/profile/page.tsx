@@ -8,6 +8,8 @@ import CustomSticker from '../components/CustomSticker';
 export default function Profile() {
   const { data: session } = useSession();
 
+  console.log(session);
+
   return (
     <>
       <div className="border w-full flex flex-col items-center py-8 rounded-xl">
@@ -34,6 +36,7 @@ export default function Profile() {
       <div className="border mt-8 w-full flex flex-col items-center py-4">
         <h1 className="font-bold text-2xl mb-4">내 스티커</h1>
         <CustomSticker />
+        <Link href={'/profile/sticker'}>수정</Link>
       </div>
       <Link
         href="/profile/delete"
