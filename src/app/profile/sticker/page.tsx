@@ -25,7 +25,6 @@ export default function EditSticker() {
     });
 
     const updatedStickers = await response.json();
-    console.log({ updatedStickers });
 
     const newSession = {
       ...session,

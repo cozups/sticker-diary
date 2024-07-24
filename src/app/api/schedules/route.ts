@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const date = searchParams.get('date');
+  const id = searchParams.get('id');
   const session = await auth();
 
   if (!session) return;
@@ -15,7 +16,6 @@ export async function GET(req: NextRequest) {
 
     const gteString = new Date(format(startOfMonth(date), dateFormat));
     const lteString = new Date(format(endOfMonth(date), dateFormat));
-    console.log({ gteString, lteString });
     const schedules = await prisma.schedule.findMany({
       where: {
         userId: session.user.email as string,
@@ -26,16 +26,16 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    console.log({ schedules });
-
     return NextResponse.json(schedules, { status: 200 });
+  }
+
+  if (id) {
+    return NextResponse.json({ message: 'hello' }, { status: 200 });
   }
 }
 export async function POST(req: NextRequest) {
   const session = await auth();
   const schedule = await req.json();
-
-  console.log(schedule.date);
 
   const result = await prisma.schedule.create({
     data: {
@@ -47,4 +47,37 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json(result, { status: 201 });
+}
+
+export async function DELETE(req: NextRequest) {
+  const session = await auth();
+  const { id } = await req.json();
+
+  const schedule = await prisma.schedule.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!schedule) {
+    return NextResponse.json({ error: 'Schedule not found.' }, { status: 404 });
+  }
+
+  if (schedule.userId !== session?.user.email) {
+    return NextResponse.json(
+      { error: "You can't delete this schedule." },
+      { status: 403 }
+    );
+  }
+
+  const result = await prisma.schedule.delete({
+    where: {
+      id,
+    },
+  });
+
+  return NextResponse.json(
+    { result: 'DELETE schedule success.' },
+    { status: 201 }
+  );
 }
