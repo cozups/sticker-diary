@@ -17,6 +17,7 @@ export default async function ScheduleDetails({
       <h1 className="text-2xl font-bold py-8 bg-orange-50 w-full text-center">
         {schedule?.title}
       </h1>
+      <p>{schedule?.date.toDateString()}</p>
       <p className="py-4 min-h-48">{schedule?.description}</p>
       <ClientButtons id={params.id} />
     </div>

@@ -30,7 +30,19 @@ export async function GET(req: NextRequest) {
   }
 
   if (id) {
-    return NextResponse.json({ message: 'hello' }, { status: 200 });
+    console.log(id);
+    const schedule = await prisma.schedule.findUnique({
+      where: { id: id },
+    });
+
+    if (!schedule) {
+      return NextResponse.json(
+        { error: 'Schedule not found.' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(schedule, { status: 200 });
   }
 }
 export async function POST(req: NextRequest) {
@@ -47,6 +59,43 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json(result, { status: 201 });
+}
+
+export async function PATCH(req: NextRequest) {
+  const session = await auth();
+  const { id, title, description } = await req.json();
+
+  const schedule = await prisma.schedule.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!schedule) {
+    return NextResponse.json({ error: 'Schedule not found.' }, { status: 404 });
+  }
+
+  if (schedule.userId !== session?.user.email) {
+    return NextResponse.json(
+      { error: "You can't delete this schedule." },
+      { status: 403 }
+    );
+  }
+
+  const result = await prisma.schedule.update({
+    where: {
+      id,
+    },
+    data: {
+      title,
+      description,
+    },
+  });
+
+  return NextResponse.json(
+    { result: 'PATCH schedule success.' },
+    { status: 201 }
+  );
 }
 
 export async function DELETE(req: NextRequest) {

@@ -4,7 +4,10 @@ import { useRouter } from 'next/navigation';
 
 export default function ClientButtons({ id }: { id: string }) {
   const router = useRouter();
-  const onClickModify = async () => {};
+
+  const onClickModify = async () => {
+    router.push('/schedule/edit?id=' + id);
+  };
   const onClickDelete = async () => {
     const response = await fetch('/api/schedules', {
       method: 'DELETE',

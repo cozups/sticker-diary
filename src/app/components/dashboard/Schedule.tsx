@@ -55,7 +55,10 @@ export default function Scheduler() {
           </div>
         )}
       </div>
-      <Link href={'/schedule'} className="shadow px-4 py-2 rounded block mb-4">
+      <Link
+        href={'/schedule/add'}
+        className="shadow px-4 py-2 rounded block mb-4"
+      >
         +
       </Link>
     </div>

@@ -2,16 +2,12 @@
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
-import { dateState } from '../states';
+import { dateState } from '@/app/states';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { getTimezoneOffset } from 'date-fns-tz';
-import { formatDate } from '../utils';
-
-interface Schedule {
-  title: string;
-  description: string;
-}
+import { formatDate } from '@/app/utils';
+import { Schedule } from '@/app/types';
 
 export default function ScheduleForm() {
   const [date] = useRecoilState(dateState);

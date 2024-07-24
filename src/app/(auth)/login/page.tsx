@@ -3,13 +3,6 @@
 import { signIn } from 'next-auth/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-interface FormInput {
-  username?: string;
-  email: string;
-  password: string;
-  confirmPassword?: string;
-}
-
 interface LoginFormInput {
   email: string;
   password: string;
