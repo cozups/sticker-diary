@@ -68,5 +68,6 @@ model Diary {
   date        DateTime
   title       String
   contents    String
+  expression  String
   user         User     @relation(fields: [userId], references: [email])
 }

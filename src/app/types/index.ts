@@ -10,4 +10,5 @@ export interface Diary {
   title: string;
   date: Date;
   contents: string;
+  expression: string;
 }

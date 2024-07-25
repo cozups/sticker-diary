@@ -25,6 +25,8 @@ import {
   MdKeyboardDoubleArrowRight,
 } from 'react-icons/md';
 import { useRecoilState } from 'recoil';
+import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -32,6 +34,7 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useRecoilState(dateState);
   const [schedules, setSchedules] = useRecoilState(scheduleState);
   const [diaries, setDiaries] = useRecoilState(diaryState);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchSchedules = async () => {
@@ -126,6 +129,9 @@ export default function Calendar() {
         const scheduleOfToday = schedules.filter((schedule) =>
           isSameDay(schedule.date, day)
         );
+        const diaryOfToday = diaries.filter((diary) =>
+          isSameDay(diary.date, day)
+        )[0];
         days.push(
           <div
             key={day.toDateString()}
@@ -146,6 +152,20 @@ export default function Calendar() {
                 {schedule.title}
               </div>
             ))}
+            {diaryOfToday && (
+              <div>
+                <Image
+                  src={
+                    session?.user.stickers
+                      ? session.user.stickers[diaryOfToday.expression]
+                      : `/stickers/${diaryOfToday.expression}.png`
+                  }
+                  width={20}
+                  height={20}
+                  alt="expression"
+                />
+              </div>
+            )}
           </div>
         );
         day = addDays(day, 1);
