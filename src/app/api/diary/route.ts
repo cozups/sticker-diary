@@ -1,6 +1,7 @@
 import { prisma } from '@/app/lib/prisma';
+import { formatDate } from '@/app/utils';
 import { auth } from '@/auth';
-import { addDays } from 'date-fns';
+import { startOfMonth, endOfMonth, format } from 'date-fns';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -16,14 +17,14 @@ export async function GET(req: NextRequest) {
   }
 
   if (date) {
-    const gteString = new Date(date);
-    const ltString = addDays(gteString, 1);
+    const gteString = new Date(formatDate(startOfMonth(date)));
+    const lteString = new Date(formatDate(endOfMonth(date)));
     const diary = await prisma.diary.findMany({
       where: {
         userId: session.user.email as string,
         date: {
           gte: gteString,
-          lt: ltString,
+          lte: lteString,
         },
       },
     });

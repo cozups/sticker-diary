@@ -30,7 +30,6 @@ export async function GET(req: NextRequest) {
   }
 
   if (id) {
-    console.log(id);
     const schedule = await prisma.schedule.findUnique({
       where: { id: id },
     });

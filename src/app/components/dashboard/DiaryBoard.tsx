@@ -24,10 +24,10 @@ export default function DiaryBoard() {
   return (
     <div className="h-full">
       <h1 className="font-bold text-center pt-3 pb-1 text-xl ">Diary</h1>
+      <p className="text-sm text-gray-500">{formatDate(date)}</p>
       {diary ? (
         <div>
           <h1 className="text-lg font-semibold">{diary.title}</h1>
-          <p className="text-sm text-gray-500">{formatDate(diary.date)}</p>
           <div>
             <Image
               src={
