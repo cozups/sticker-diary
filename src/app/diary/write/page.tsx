@@ -1,25 +1,22 @@
 'use client';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
-
-interface Diary {
-  title: string;
-  contents: string;
-}
+import { Diary } from '@/app/types';
+import { useRecoilValue } from 'recoil';
+import { dateState } from '@/app/states';
 
 export default function WriteDiary() {
   const { register, handleSubmit } = useForm<Diary>();
+  const date = useRecoilValue(dateState);
 
   const onSubmit: SubmitHandler<Diary> = async (data: Diary) => {
-    console.log(data);
-
     const response = await fetch('/api/diary', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        date: new Date(),
+        date,
         ...data,
       }),
     });

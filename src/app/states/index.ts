@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { Schedule } from '@/app/components/dashboard/Scheduler';
+import { Schedule, Diary } from '@/app/types';
 
 export const dateState = atom<Date>({
   key: 'dateState',
@@ -13,5 +13,10 @@ export const dateLoadingState = atom<boolean>({
 
 export const scheduleState = atom<Schedule[]>({
   key: 'scheduleState',
+  default: [],
+});
+
+export const diaryState = atom<Diary[]>({
+  key: 'diaryState',
   default: [],
 });

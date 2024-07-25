@@ -1,6 +1,11 @@
 'use client';
 
-import { dateLoadingState, dateState, scheduleState } from '@/app/states';
+import {
+  dateLoadingState,
+  dateState,
+  diaryState,
+  scheduleState,
+} from '@/app/states';
 import { formatDate } from '@/app/utils';
 import {
   addMonths,
@@ -26,21 +31,28 @@ export default function Calendar() {
   const [dateLoading, setDateLoading] = useRecoilState(dateLoadingState);
   const [selectedDate, setSelectedDate] = useRecoilState(dateState);
   const [schedules, setSchedules] = useRecoilState(scheduleState);
+  const [diaries, setDiaries] = useRecoilState(diaryState);
 
   useEffect(() => {
     const fetchSchedules = async () => {
       setDateLoading(true);
-      const response = await fetch(
+      const schedulesResponse = await fetch(
         `/api/schedules?date=${formatDate(currentDate)}`
       );
-      const data = await response.json();
+      const fetchedSchedules = await schedulesResponse.json();
 
-      setSchedules(data);
+      const diaryResponse = await fetch(
+        `/api/diary?date=${formatDate(currentDate)}`
+      );
+      const fetchedDiary = await diaryResponse.json();
+
+      setSchedules(fetchedSchedules);
+      setDiaries(fetchedDiary);
       setDateLoading(false);
     };
 
     fetchSchedules();
-  }, [currentDate, setSchedules, setDateLoading]);
+  }, [currentDate, setSchedules, setDateLoading, setDiaries]);
 
   const renderHeader = () => {
     const dateFormat = 'yyyy년 M월';
