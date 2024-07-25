@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { Schedule } from './Schedule';
+import { Schedule } from './Scheduler';
 
 export default function ScheduleCell({ schedule }: { schedule: Schedule }) {
   const router = useRouter();

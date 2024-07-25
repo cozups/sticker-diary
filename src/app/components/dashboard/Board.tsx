@@ -1,12 +1,11 @@
-import Scheduler from '@components/dashboard/Schedule';
+import Scheduler from '@/app/components/dashboard/Scheduler';
+import Diary from '@/app/components/dashboard/Diary';
 
 export default function Board() {
   return (
     <div className="grid grid-cols-2 h-full">
       <Scheduler />
-      <div>
-        <h1>Diary</h1>
-      </div>
+      <Diary />
     </div>
   );
 }

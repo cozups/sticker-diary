@@ -23,6 +23,7 @@ model User {
   accounts  Account[]
   sessions  Session[]
   schedules Schedule[]
+  Diaries   Diary[]
 }
 model Account {
   id                 String    @id @default(cuid())
@@ -58,5 +59,14 @@ model Schedule {
   date        DateTime
   title       String
   description String
+  user         User     @relation(fields: [userId], references: [email])
+}
+
+model Diary {
+  id          String @id @default(cuid())
+  userId      String
+  date        DateTime
+  title       String
+  contents    String
   user         User     @relation(fields: [userId], references: [email])
 }

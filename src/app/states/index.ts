@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { Schedule } from '@components/dashboard/Schedule';
+import { Schedule } from '@/app/components/dashboard/Scheduler';
 
 export const dateState = atom<Date>({
   key: 'dateState',
