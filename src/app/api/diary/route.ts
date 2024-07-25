@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const date = searchParams.get('date');
+  const id = searchParams.get('id');
   const session = await auth();
 
   if (!session) {
@@ -27,6 +28,14 @@ export async function GET(req: NextRequest) {
           lte: lteString,
         },
       },
+    });
+
+    return NextResponse.json(diary, { status: 200 });
+  }
+
+  if (id) {
+    const diary = await prisma.diary.findUnique({
+      where: { id },
     });
 
     return NextResponse.json(diary, { status: 200 });
@@ -55,6 +64,38 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json(
     { message: 'POST diary success.', result },
+    { status: 201 }
+  );
+}
+
+export async function PATCH(req: NextRequest) {
+  const { id, ...data } = await req.json();
+  const session = await auth();
+
+  const diary = await prisma.diary.findUnique({
+    where: { id },
+  });
+
+  if (!diary) {
+    return NextResponse.json({ error: 'Diary not found.' }, { status: 404 });
+  }
+
+  if (session?.user.email !== diary.userId) {
+    return NextResponse.json(
+      { error: "You can't update this diary." },
+      { status: 403 }
+    );
+  }
+
+  const result = await prisma.diary.update({
+    where: {
+      id,
+    },
+    data,
+  });
+
+  return NextResponse.json(
+    { result: 'UPDATE Diary success.' },
     { status: 201 }
   );
 }
