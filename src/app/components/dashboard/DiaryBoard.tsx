@@ -21,6 +21,16 @@ export default function DiaryBoard() {
     setDiary(diaryOfToday[0]);
   }, [date, diaries]);
 
+  const onClickDelete = async () => {
+    const response = await fetch('/api/diary', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: diary?.id }),
+    });
+  };
+
   return (
     <div className="h-full">
       <h1 className="font-bold text-center pt-3 pb-1 text-xl ">Diary</h1>
@@ -55,7 +65,10 @@ export default function DiaryBoard() {
             >
               수정
             </Link>
-            <button className="bg-red-800 text-white px-2 py-1 rounded-lg mr-1">
+            <button
+              onClick={onClickDelete}
+              className="bg-red-800 text-white px-2 py-1 rounded-lg mr-1"
+            >
               삭제
             </button>
           </div>

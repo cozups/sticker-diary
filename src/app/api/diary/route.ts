@@ -99,3 +99,36 @@ export async function PATCH(req: NextRequest) {
     { status: 201 }
   );
 }
+
+export async function DELETE(req: NextRequest) {
+  const session = await auth();
+  const { id } = await req.json();
+
+  const diary = await prisma.diary.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!diary) {
+    return NextResponse.json({ error: 'Diary not found.' }, { status: 404 });
+  }
+
+  if (diary.userId !== session?.user.email) {
+    return NextResponse.json(
+      { error: "You can't delete this diary." },
+      { status: 403 }
+    );
+  }
+
+  const result = await prisma.diary.delete({
+    where: {
+      id,
+    },
+  });
+
+  return NextResponse.json(
+    { result: 'DELETE diary success.' },
+    { status: 201 }
+  );
+}
