@@ -17,8 +17,6 @@ export default function EditSticker() {
       formData.append(key, file);
     });
 
-    formData.append('email', session?.user!.email as string);
-
     const response = await fetch('/api/images?target=stickers', {
       method: 'POST',
       body: formData,
