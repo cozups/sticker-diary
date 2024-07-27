@@ -1,12 +1,10 @@
-'use client';
-
 import Image from 'next/image';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import CustomSticker from '../components/CustomSticker';
+import { auth } from '@/auth';
 
-export default function Profile() {
-  const { data: session } = useSession();
+export default async function Profile() {
+  const session = await auth();
 
   return (
     <>

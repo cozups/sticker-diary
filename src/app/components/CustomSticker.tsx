@@ -1,8 +1,8 @@
-import { useSession } from 'next-auth/react';
+import { auth } from '@/auth';
 import Image from 'next/image';
 
-export default function CustomSticker() {
-  const { data: session } = useSession();
+export default async function CustomSticker() {
+  const session = await auth();
 
   return (
     <div className="flex gap-10 text-center">
