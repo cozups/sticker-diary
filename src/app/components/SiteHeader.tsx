@@ -1,18 +1,17 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSession, signOut } from 'next-auth/react';
+import { auth } from '@/auth';
+import LogoutButton from './client/LogoutButton';
 
-export default function SiteHeader() {
-  const { data: session, status } = useSession();
+export default async function SiteHeader() {
+  const session = await auth();
 
   return (
     <header className="flex items-center justify-between px-8 py-4 bg-indigo-200">
       <Link href="/" className="text-4xl font-black">
         스티커 일기
       </Link>
-      {status === 'authenticated' ? (
+      {session ? (
         <div className="flex gap-4">
           <Link
             className="flex items-center justify-center gap-2"
@@ -29,12 +28,7 @@ export default function SiteHeader() {
             </div>
             <p className="font-semibold">{session.user?.name}</p>
           </Link>
-          <button
-            className="bg-indigo-800 text-white rounded-lg px-2 py-1"
-            onClick={() => signOut({ callbackUrl: '/' })}
-          >
-            로그아웃
-          </button>
+          <LogoutButton />
         </div>
       ) : (
         <div className="flex items-center justify-center gap-2">
