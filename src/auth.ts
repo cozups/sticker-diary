@@ -65,6 +65,7 @@ export const authOptions: NextAuthConfig = {
         // 세션 업데이트 시
         token.picture = session.user.image;
         token.stickers = session.user.stickers;
+        return { ...token, ...session.user };
       }
       return token;
     },
