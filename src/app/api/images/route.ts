@@ -74,16 +74,12 @@ export async function POST(req: NextRequest) {
     for (const key of formData.keys()) {
       // delete previous Sticker
       const deleteKey = savedStickers[key]?.split('/').slice(-1)[0];
-      await DeleteImageFromS3(deleteKey, session.user.email as string);
+      await DeleteImageFromS3(deleteKey);
 
       // upload new Sticker
       const file = formData.get(key) as File;
       const fileName = `STK_${createRandomString(10)}`;
-      const objectUrl = await uploadImageToS3(
-        fileName,
-        file,
-        session.user.email as string
-      );
+      const objectUrl = await uploadImageToS3(fileName, file);
 
       stickers[key] = objectUrl;
     }
@@ -125,7 +121,7 @@ export async function DELETE(req: NextRequest) {
   );
 }
 
-async function uploadImageToS3(fileName: string, file: File, email: string) {
+async function uploadImageToS3(fileName: string, file: File) {
   const fileBuffer = Buffer.from(await file.arrayBuffer());
 
   const uploadCommand = new PutObjectCommand({
@@ -140,7 +136,7 @@ async function uploadImageToS3(fileName: string, file: File, email: string) {
   return objectUrl;
 }
 
-async function DeleteImageFromS3(key: string | null, email: string) {
+async function DeleteImageFromS3(key: string | null) {
   if (key) {
     const deletePrevCommand = new DeleteObjectCommand({
       Bucket,
