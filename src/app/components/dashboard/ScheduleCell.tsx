@@ -1,5 +1,5 @@
+import { Schedule } from '@/app/types';
 import { useRouter } from 'next/navigation';
-import { Schedule } from './Scheduler';
 
 export default function ScheduleCell({ schedule }: { schedule: Schedule }) {
   const router = useRouter();
@@ -9,11 +9,14 @@ export default function ScheduleCell({ schedule }: { schedule: Schedule }) {
   };
 
   return (
-    <div className="border rounded-lg my-2 cursor-pointer" onClick={onClick}>
-      <h2 className="border-b font-semibold bg-orange-50 text-lg pl-2 py-1">
+    <div
+      className="rounded-xl my-2 cursor-pointer overflow-hidden shadow-sm"
+      onClick={onClick}
+    >
+      <h2 className="font-semibold text-lg pl-2 py-1 bg-sky-50">
         {schedule.title}
       </h2>
-      <p className="pl-2 h-16 text-gray-500 text-sm pt-1">
+      <p className="pl-2 h-16 text-gray-400 text-sm pt-1 bg-white">
         {schedule.description}
       </p>
     </div>

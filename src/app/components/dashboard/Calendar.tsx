@@ -135,7 +135,7 @@ export default function Calendar() {
         days.push(
           <div
             key={day.toDateString()}
-            className={`text-center h-24 w-full border  ${
+            className={`relative text-center h-24 w-full border  ${
               !isSameMonth(day, monthStart) && 'text-gray-300'
             } ${
               isSameDay(day, selectedDate)
@@ -147,22 +147,26 @@ export default function Calendar() {
             }}
           >
             <span className="number">{formattedDate}</span>
-            {scheduleOfToday.map((schedule) => (
-              <div key={schedule.id} className="bg-orange-100 text-xs">
-                {schedule.title}
-              </div>
-            ))}
+            <div className="flex items-center flex-wrap gap-1">
+              {scheduleOfToday.map((schedule) => (
+                <div
+                  key={schedule.id}
+                  className="bg-sky-100 text-xs rounded-full w-3 h-3"
+                ></div>
+              ))}
+            </div>
             {diaryOfToday && (
-              <div>
+              <div className="absolute bottom-1 right-1">
                 <Image
                   src={
                     session?.user.stickers
                       ? session.user.stickers[diaryOfToday.expression]
                       : `/stickers/${diaryOfToday.expression}.png`
                   }
-                  width={20}
-                  height={20}
+                  width={60}
+                  height={60}
                   alt="expression"
+                  className="w-8 h-8 object-cover  rounded-full"
                 />
               </div>
             )}
