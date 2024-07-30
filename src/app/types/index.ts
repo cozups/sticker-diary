@@ -12,3 +12,8 @@ export interface Diary {
   contents: string;
   expression: string;
 }
+
+export interface CalendarDate {
+  currentDate: Date;
+  selectedDate: Date;
+}

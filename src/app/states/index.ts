@@ -1,9 +1,12 @@
 import { atom } from 'recoil';
-import { Schedule, Diary } from '@/app/types';
+import { Schedule, Diary, CalendarDate } from '@/app/types';
 
-export const dateState = atom<Date>({
+export const dateState = atom<CalendarDate>({
   key: 'dateState',
-  default: new Date(),
+  default: {
+    currentDate: new Date(),
+    selectedDate: new Date(),
+  },
 });
 
 export const dateLoadingState = atom<boolean>({
@@ -11,12 +14,12 @@ export const dateLoadingState = atom<boolean>({
   default: false,
 });
 
-export const scheduleState = atom<Schedule[]>({
+export const scheduleState = atom<Map<string, Schedule[]>>({
   key: 'scheduleState',
-  default: [],
+  default: new Map(),
 });
 
-export const diaryState = atom<Diary[]>({
+export const diaryState = atom<Map<string, Diary>>({
   key: 'diaryState',
-  default: [],
+  default: new Map(),
 });

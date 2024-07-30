@@ -1,17 +1,14 @@
 'use client';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { dateState } from '@/app/states';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { getTimezoneOffset } from 'date-fns-tz';
 import { formatDate } from '@/app/utils';
 import { Schedule } from '@/app/types';
 
 export default function ScheduleForm() {
-  const [date] = useRecoilState(dateState);
-  const { data: session } = useSession();
+  const date = useRecoilValue(dateState);
   const { register, handleSubmit } = useForm<Schedule>();
   const router = useRouter();
 
@@ -23,7 +20,7 @@ export default function ScheduleForm() {
       },
       body: JSON.stringify({
         ...data,
-        date: new Date(formatDate(date)),
+        date: new Date(formatDate(date.selectedDate)),
       }),
     });
 

@@ -4,23 +4,23 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 import { dateState, diaryState } from '@/app/states';
-import { isSameDay } from 'date-fns';
 import { Diary } from '@/app/types';
 import { formatDate } from '@/app/utils';
-import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import RoundImage from '../UI/RoundImage';
 
 export default function DiaryBoard() {
   const [diary, setDiary] = useState<Diary | null>(null);
-  const date = useRecoilValue(dateState);
+  const { selectedDate } = useRecoilValue(dateState);
   const diaries = useRecoilValue(diaryState);
   const { data: session } = useSession();
 
   useEffect(() => {
-    const diaryOfToday = diaries.filter((diary) => isSameDay(diary.date, date));
-    setDiary(diaryOfToday[0]);
-  }, [date, diaries]);
+    if (diaries) {
+      const diaryOfToday = diaries.get(formatDate(selectedDate)) || null;
+      setDiary(diaryOfToday);
+    }
+  }, [selectedDate, diaries]);
 
   const onClickDelete = async () => {
     const response = await fetch('/api/diary', {
@@ -36,7 +36,7 @@ export default function DiaryBoard() {
     <div className="h-full">
       <h1 className="font-bold text-center pt-3 pb-1 text-xl ">Diary</h1>
       <p className="text-sm text-gray-500 text-center mb-4">
-        {formatDate(date)}
+        {formatDate(selectedDate)}
       </p>
       {diary ? (
         <div className="border rounded-lg overflow-hidden mx-2 flex flex-col items-center justify-center">

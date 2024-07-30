@@ -10,26 +10,25 @@ import { isSameDay } from 'date-fns';
 import { Schedule } from '@/app/types';
 
 export default function Scheduler() {
-  const date = useRecoilValue(dateState);
+  const { selectedDate } = useRecoilValue(dateState);
   const monthSchedules = useRecoilValue(scheduleState);
   const isLoading = useRecoilValue(dateLoadingState);
   const [schedules, setSchedules] = useState<Schedule[]>([]);
 
   useEffect(() => {
-    const fetchSchedules = async () => {
-      const filtered = monthSchedules.filter((sc) => isSameDay(sc.date, date));
-      setSchedules(filtered);
-    };
-
-    fetchSchedules();
-  }, [date, monthSchedules]);
+    if (monthSchedules) {
+      const schedulesOfToday =
+        monthSchedules.get(formatDate(selectedDate)) || [];
+      setSchedules(schedulesOfToday);
+    }
+  }, [selectedDate, monthSchedules]);
 
   return (
     <div className="flex flex-col justify-center items-center h-full">
       <div>
         <h1 className="font-bold text-center pt-3 pb-1 text-xl">Schedule</h1>
         <div className="text-sm text-center text-gray-500">
-          {formatDate(date)}
+          {formatDate(selectedDate)}
         </div>
       </div>
       <div className="w-full flex flex-col justify-center items-center flex-grow overflow-y-auto px-4 py-8">

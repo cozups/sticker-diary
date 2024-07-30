@@ -1,4 +1,4 @@
-import Calendar from '@components/dashboard/Calendar';
+import Calendar from '@components/dashboard/calendar/Calendar';
 import Board from '@components/dashboard/Board';
 
 export default function Dashboard() {
