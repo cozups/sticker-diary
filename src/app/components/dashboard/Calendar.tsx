@@ -27,6 +27,7 @@ import {
 import { useRecoilState } from 'recoil';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
+import RoundImage from '../UI/RoundImage';
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -157,7 +158,7 @@ export default function Calendar() {
             </div>
             {diaryOfToday && (
               <div className="absolute bottom-1 right-1">
-                <Image
+                <RoundImage
                   src={
                     session?.user.stickers
                       ? session.user.stickers[diaryOfToday.expression]
@@ -166,7 +167,6 @@ export default function Calendar() {
                   width={60}
                   height={60}
                   alt="expression"
-                  className="w-8 h-8 object-cover  rounded-full"
                 />
               </div>
             )}

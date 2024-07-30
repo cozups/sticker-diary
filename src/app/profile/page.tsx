@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import CustomSticker from '../components/CustomSticker';
 import { auth } from '@/auth';
+import RoundImage from '../components/UI/RoundImage';
 
 export default async function Profile() {
   const session = await auth();
@@ -9,15 +10,12 @@ export default async function Profile() {
   return (
     <>
       <div className="border w-full flex flex-col items-center py-8 rounded-xl">
-        <div className="rounded-full w-32 h-32 overflow-hidden">
-          <Image
-            src={session?.user?.image || '/default_profile.png'}
-            alt="profile"
-            width={500}
-            height={500}
-            className="w-auto h-full object-cover"
-          />
-        </div>
+        <RoundImage
+          src={session?.user?.image || '/default_profile.png'}
+          alt="profile"
+          width={500}
+          height={500}
+        />
         <div className="my-4 text-center">
           <h1 className="font-bold text-3xl">{session?.user?.name}</h1>
           <h2 className="text-gray-500">{session?.user?.email}</h2>

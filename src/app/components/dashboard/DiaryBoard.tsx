@@ -9,6 +9,7 @@ import { Diary } from '@/app/types';
 import { formatDate } from '@/app/utils';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
+import RoundImage from '../UI/RoundImage';
 
 export default function DiaryBoard() {
   const [diary, setDiary] = useState<Diary | null>(null);
@@ -41,8 +42,8 @@ export default function DiaryBoard() {
         <div className="border rounded-lg overflow-hidden mx-2 flex flex-col items-center justify-center">
           <div className="flex justify-between items-center py-4 px-2 bg-orange-50 w-full">
             <h1 className="text-lg font-semibold">{diary.title}</h1>
-            <div className="flex gap-1 shadow w-fit px-2 py-1 rounded-lg bg-white">
-              <Image
+            <div className="flex gap-1 shadow w-fit px-2 py-1 rounded-lg bg-white items-center">
+              <RoundImage
                 src={
                   session?.user?.stickers
                     ? session?.user?.stickers[diary.expression]

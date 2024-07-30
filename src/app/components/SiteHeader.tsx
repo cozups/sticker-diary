@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { auth } from '@/auth';
 import LogoutButton from './client/LogoutButton';
+import RoundImage from './UI/RoundImage';
 
 export default async function SiteHeader() {
   const session = await auth();
@@ -17,15 +18,12 @@ export default async function SiteHeader() {
             className="flex items-center justify-center gap-2"
             href="/profile"
           >
-            <div className="rounded-full w-8 h-8 overflow-hidden">
-              <Image
-                src={session.user?.image || '/default_profile.png'}
-                alt="profile"
-                width={120}
-                height={120}
-                className="w-auto h-full object-cover"
-              />
-            </div>
+            <RoundImage
+              src={session.user?.image || '/default_profile.png'}
+              alt="profile"
+              width={120}
+              height={120}
+            />
             <p className="font-semibold">{session.user?.name}</p>
           </Link>
           <LogoutButton />
