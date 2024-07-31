@@ -1,10 +1,20 @@
 'use client';
 
-interface ButtonProps {
+import { ButtonHTMLAttributes } from 'react';
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  onClick?: (e?: React.MouseEvent) => void;
+  customStyle?: string;
 }
 
-export default function Button({ children, onClick }: ButtonProps) {
-  return <button onClick={onClick}>{children}</button>;
+export default function Button({
+  children,
+  customStyle = '',
+  onClick,
+}: ButtonProps) {
+  return (
+    <button className={'rounded px-2 py-1 ' + customStyle} onClick={onClick}>
+      {children}
+    </button>
+  );
 }

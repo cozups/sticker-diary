@@ -1,5 +1,7 @@
 'use client';
 
+import Button from '@/app/components/UI/Button';
+import StyledInput from '@/app/components/UI/StyledInput';
 import { signIn } from 'next-auth/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -35,32 +37,52 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-1/4">
-        <div className="flex flex-col">
-          <label htmlFor="email">ID</label>
-          <input
-            id="email"
-            {...register('email', { required: true })}
-            className="border"
-          />
-          {errors.email && <p>이메일을 입력하세요.</p>}
-        </div>
+    <div className="flex flex-col items-center justify-center px-16">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full">
+        <h1 className="text-center text-2xl font-bold mb-8 py-8 w-full text-indigo-700">
+          로그인
+        </h1>
+        <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col w-full mb-3">
+            <label className="text-gray-400" htmlFor="email">
+              Email
+            </label>
+            <StyledInput
+              id="email"
+              {...register('email', { required: true })}
+            />
+            {errors.email && <p>이메일을 입력하세요.</p>}
+          </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            {...register('password', { required: true })}
-            className="border"
-          />
-          {errors.password && <p>비밀번호를 입력하세요.</p>}
-        </div>
+          <div className="flex flex-col w-full mt-3 mb-6">
+            <label className="text-gray-400" htmlFor="password">
+              Password
+            </label>
+            <StyledInput
+              id="password"
+              type="password"
+              {...register('password', { required: true })}
+            />
+            {errors.password && <p>비밀번호를 입력하세요.</p>}
+          </div>
 
-        <button type="submit">로그인</button>
+          <Button
+            customStyle="bg-gray-100 w-full hover:bg-gray-200 transition-color ease-in duration-100"
+            type="submit"
+          >
+            로그인
+          </Button>
+        </div>
       </form>
-      <button onClick={onGoogleLogin}>Google 로그인</button>
+
+      <div className="w-1/2 h-0 border-b my-8"></div>
+
+      <Button
+        customStyle="bg-blue-800 text-white w-full hover:bg-blue-900 transition-color ease-in duration-100"
+        onClick={onGoogleLogin}
+      >
+        Google 로그인
+      </Button>
     </div>
   );
 }
