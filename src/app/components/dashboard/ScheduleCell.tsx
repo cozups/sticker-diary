@@ -10,7 +10,7 @@ export default function ScheduleCell({ schedule }: { schedule: Schedule }) {
 
   return (
     <div
-      className="rounded-xl my-2 cursor-pointer overflow-hidden shadow-sm"
+      className="w-full rounded-xl mb-2 cursor-pointer overflow-hidden shadow-sm"
       onClick={onClick}
     >
       <h2 className="font-semibold text-lg pl-2 py-1 bg-sky-50">

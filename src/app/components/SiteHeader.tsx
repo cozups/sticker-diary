@@ -8,7 +8,7 @@ export default async function SiteHeader() {
   const session = await auth();
 
   return (
-    <header className="flex items-center justify-between px-8 py-4 bg-indigo-200">
+    <header className="flex items-center justify-between px-8 py-4 bg-indigo-200 flex-none">
       <Link href="/" className="text-4xl font-black">
         스티커 일기
       </Link>

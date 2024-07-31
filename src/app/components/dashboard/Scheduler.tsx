@@ -6,7 +6,6 @@ import { formatDate } from '@/app/utils';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ScheduleCell from './ScheduleCell';
-import { isSameDay } from 'date-fns';
 import { Schedule } from '@/app/types';
 
 export default function Scheduler() {
@@ -24,24 +23,29 @@ export default function Scheduler() {
   }, [selectedDate, monthSchedules]);
 
   return (
-    <div className="flex flex-col justify-center items-center h-full">
-      <div>
+    <div
+      id="schedulerContainer"
+      className="flex flex-col h-full items-center justify-center"
+    >
+      <div id="schedulerHeader" className="flex-none">
         <h1 className="font-bold text-center pt-3 pb-1 text-xl">Schedule</h1>
         <div className="text-sm text-center text-gray-500">
           {formatDate(selectedDate)}
         </div>
       </div>
-      <div className="w-full flex flex-col justify-center items-center flex-grow overflow-y-auto px-4 py-8">
+      <div id="schedulerBody" className="w-full grow p-4">
         {isLoading ? (
-          <div>loading...</div>
+          <div className="w-full h-full flex items-center justify-center">
+            loading...
+          </div>
         ) : (
-          <div className="w-full">
+          <div className="w-full h-full">
             {schedules.length ? (
               schedules.map((schedule) => (
                 <ScheduleCell key={schedule.id} schedule={schedule} />
               ))
             ) : (
-              <div className="font-semibold text-center">
+              <div className="font-semibold text-center h-full flex flex-col justify-center items-center">
                 스케줄이 없습니다.
               </div>
             )}
