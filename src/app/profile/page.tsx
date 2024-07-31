@@ -30,7 +30,12 @@ export default async function Profile() {
       <div className="border mt-8 w-full flex flex-col items-center py-4">
         <h1 className="font-bold text-2xl mb-4">내 스티커</h1>
         <CustomSticker />
-        <Link href={'/profile/sticker'}>수정</Link>
+        <Link
+          href={'/profile/sticker'}
+          className="bg-indigo-800 text-white px-2 py-1 rounded-lg mt-4"
+        >
+          수정
+        </Link>
       </div>
       <Link
         href="/profile/delete"

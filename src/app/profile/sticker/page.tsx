@@ -1,5 +1,6 @@
 'use client';
 
+import Button from '@/app/components/UI/Button';
 import StickerInput from '@components/StickerInput';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -38,39 +39,47 @@ export default function EditSticker() {
   };
 
   return (
-    <div>
-      <h1 className="font-bold text-2xl">스티커 수정하기</h1>
-      <StickerInput
-        src={session?.user?.stickers?.best || '/stickers/best.png'}
-        alt="best"
-        title="최고!"
-        onChange={setStickers}
-      />
-      <StickerInput
-        src={session?.user?.stickers?.good || '/stickers/good.png'}
-        alt="good"
-        title="좋아!"
-        onChange={setStickers}
-      />
-      <StickerInput
-        src={session?.user?.stickers?.soso || '/stickers/soso.png'}
-        alt="soso"
-        title="그냥저냥"
-        onChange={setStickers}
-      />
-      <StickerInput
-        src={session?.user?.stickers?.bad || '/stickers/bad.png'}
-        alt="bad"
-        title="별로..."
-        onChange={setStickers}
-      />
-      <StickerInput
-        src={session?.user?.stickers?.worst || '/stickers/worst.png'}
-        alt="worst"
-        title="최악!"
-        onChange={setStickers}
-      />
-      <button onClick={onSubmit}>수정하기</button>
+    <div className="flex flex-col items-center justify-center h-full">
+      <h1 className="font-bold text-3xl mb-16">스티커 수정하기</h1>
+      <div>
+        <div className="flex items-center justify-center mb-4 gap-4">
+          <StickerInput
+            src={session?.user?.stickers?.best || '/stickers/best.png'}
+            alt="best"
+            title="최고!"
+            onChange={setStickers}
+          />
+          <StickerInput
+            src={session?.user?.stickers?.good || '/stickers/good.png'}
+            alt="good"
+            title="좋아!"
+            onChange={setStickers}
+          />
+          <StickerInput
+            src={session?.user?.stickers?.soso || '/stickers/soso.png'}
+            alt="soso"
+            title="그냥저냥"
+            onChange={setStickers}
+          />
+        </div>
+        <div className="flex items-center justify-center gap-4">
+          <StickerInput
+            src={session?.user?.stickers?.bad || '/stickers/bad.png'}
+            alt="bad"
+            title="별로..."
+            onChange={setStickers}
+          />
+          <StickerInput
+            src={session?.user?.stickers?.worst || '/stickers/worst.png'}
+            alt="worst"
+            title="최악!"
+            onChange={setStickers}
+          />
+        </div>
+      </div>
+      <Button customStyle="bg-indigo-800 my-8 text-white" onClick={onSubmit}>
+        수정하기
+      </Button>
     </div>
   );
 }

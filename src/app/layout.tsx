@@ -20,11 +20,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={notoSansKR.className + ' h-screen'}>
+      <body className={notoSansKR.className}>
         <SessionWrapper>
           <RecoilWrapper>
             <SiteHeader />
-            <div className="rounded-xl flex-grow mx-8 h-full">{children}</div>
+            <div className="rounded-xl mx-8 my-4 h-screen">{children}</div>
             <SiteFooter />
           </RecoilWrapper>
         </SessionWrapper>

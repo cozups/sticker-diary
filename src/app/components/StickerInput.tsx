@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import RoundImage from './UI/RoundImage';
 
 interface StickerInputProps {
   title: string;
@@ -28,15 +29,18 @@ export default function StickerInput({
   };
 
   return (
-    <div>
-      <Image src={imageSrc} width={96} height={96} alt={alt} />
-      <p className="font-semibold">{title}</p>
+    <div className="flex flex-col items-center justify-center shadow rounded-xl py-8">
+      <div>
+        <RoundImage src={imageSrc} width={300} height={300} alt={alt} />
+        <p className="font-semibold text-center my-2">{title}</p>
+      </div>
       <input
         type="file"
         accept="image/*"
         onChange={onChangeInput}
         ref={inputRef}
         name={alt}
+        className="w-1/2"
       />
     </div>
   );
