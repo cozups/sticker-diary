@@ -18,7 +18,7 @@ export default function WriteDiary() {
       },
       body: JSON.stringify({
         ...data,
-        date: new Date(formatDate(date)),
+        date: new Date(formatDate(date.selectedDate)),
       }),
     });
   };
