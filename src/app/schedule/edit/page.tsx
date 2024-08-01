@@ -1,5 +1,7 @@
 'use client';
 
+import Button from '@/app/components/UI/Button';
+import StyledInput from '@/app/components/UI/StyledInput';
 import { Schedule } from '@/app/types';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -46,16 +48,36 @@ export default function EditSchedule() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label htmlFor="title">Title</label>
-        <input type="text" {...register('title')} />
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="m-auto bg-white shadow rounded-xl"
+    >
+      <h1 className="text-2xl font-bold text-center my-4">스케줄 수정하기</h1>
+      <div className="px-16 pt-4 pb-8">
+        <div className="flex flex-col">
+          <label htmlFor="title" className="text-gray-400 my-2">
+            스케줄명
+          </label>
+          <StyledInput id="title" type="text" {...register('title')} />
+        </div>
+        <div className="flex flex-col">
+          <label htmlFor="description" className="text-gray-400 my-2">
+            설명
+          </label>
+          <textarea
+            id="description"
+            {...register('description')}
+            rows={4}
+            className="py-1 border-b-2 border-indigo-700 border-opacity-30 resize-none"
+          />
+        </div>
+        <Button
+          type="submit"
+          customStyle="bg-gray-100 w-full mt-8 hover:bg-gray-200 transition-color ease-in duration-100"
+        >
+          수정
+        </Button>
       </div>
-      <div>
-        <label htmlFor="description">설명</label>
-        <input type="text" {...register('description')} />
-      </div>
-      <button type="submit">수정</button>
     </form>
   );
 }

@@ -21,7 +21,7 @@ export default function ClientButtons({ id }: { id: string }) {
   };
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 absolute bottom-1 right-5">
       <button
         className="bg-blue-800 text-white px-2 py-1 rounded-lg mr-1"
         onClick={onClickModify}
