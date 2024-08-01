@@ -23,7 +23,7 @@ model User {
   accounts  Account[]
   sessions  Session[]
   schedules Schedule[]
-  Diaries   Diary[]
+  diaries   Diary[]
 }
 model Account {
   id                 String    @id @default(cuid())

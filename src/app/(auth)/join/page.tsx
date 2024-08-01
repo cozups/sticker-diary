@@ -12,8 +12,6 @@ interface FormInput {
   confirmPassword: string;
 }
 
-const InputStyle = 'border';
-
 export default function Join() {
   const router = useRouter();
   const {
@@ -57,7 +55,7 @@ export default function Join() {
             id="username"
             {...register('username', { required: true })}
           />
-          {errors.username && <p>Username is required.</p>}
+          {errors.username && <p id="username-error">Username is required.</p>}
         </div>
 
         <div className="flex flex-col my-3 w-full">
@@ -68,7 +66,9 @@ export default function Join() {
             id="email"
             {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
           />
-          {errors.email && <p>Email is required and must include @.</p>}
+          {errors.email && (
+            <p id="email-error">Email is required and must include @.</p>
+          )}
         </div>
 
         <div className="flex flex-col my-3 w-full">
@@ -81,7 +81,9 @@ export default function Join() {
             {...register('password', { required: true, minLength: 6 })}
           />
           {errors.password && (
-            <p>Password is required and must be at least 6 characters long.</p>
+            <p id="password-error">
+              Password is required and must be at least 6 characters long.
+            </p>
           )}
         </div>
 
@@ -98,7 +100,9 @@ export default function Join() {
                 watch('password') === value || 'Passwords do not match.',
             })}
           />
-          {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
+          {errors.confirmPassword && (
+            <p id="confirmPassword-error">{errors.confirmPassword.message}</p>
+          )}
         </div>
 
         <Button
