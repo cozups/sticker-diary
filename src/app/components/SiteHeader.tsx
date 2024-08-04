@@ -1,18 +1,21 @@
+'use client';
+
 import Link from 'next/link';
-import Image from 'next/image';
-import { auth } from '@/auth';
 import LogoutButton from './client/LogoutButton';
 import RoundImage from './UI/RoundImage';
+import { useSession } from 'next-auth/react';
 
-export default async function SiteHeader() {
-  const session = await auth();
+export default function SiteHeader() {
+  const { data: session, status } = useSession();
 
   return (
     <header className="flex items-center justify-between px-8 py-4 bg-indigo-200 flex-none">
       <Link href="/" className="text-4xl font-black">
         스티커 일기
       </Link>
-      {session ? (
+      {status === 'loading' ? (
+        <div></div>
+      ) : session ? (
         <div className="flex gap-4">
           <Link
             className="flex items-center justify-center gap-2"
