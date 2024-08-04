@@ -4,7 +4,6 @@ const StyledInput = forwardRef<
   HTMLInputElement,
   InputHTMLAttributes<HTMLInputElement>
 >((props, ref) => {
-  console.log(props);
   return (
     <input
       className="py-1 border-b-2 border-indigo-700 border-opacity-30"

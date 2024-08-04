@@ -8,8 +8,6 @@ import { useSession } from 'next-auth/react';
 export default function Profile() {
   const { data: session } = useSession();
 
-  console.log(session);
-
   return (
     <>
       <div className="border w-full flex flex-col items-center py-8 rounded-xl">
