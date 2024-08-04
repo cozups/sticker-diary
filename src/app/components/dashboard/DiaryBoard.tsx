@@ -33,11 +33,13 @@ export default function DiaryBoard() {
   };
 
   return (
-    <div className="h-full">
-      <h1 className="font-bold text-center pt-3 pb-1 text-xl ">Diary</h1>
-      <p className="text-sm text-gray-500 text-center mb-4">
-        {formatDate(selectedDate)}
-      </p>
+    <div className="h-full flex flex-col">
+      <div>
+        <h1 className="font-bold text-center pt-3 pb-1 text-xl ">Diary</h1>
+        <p className="text-sm text-gray-500 text-center mb-4">
+          {formatDate(selectedDate)}
+        </p>
+      </div>
       {diary ? (
         <div className="border rounded-lg overflow-hidden mx-2 flex flex-col items-center justify-center">
           <div className="flex justify-between items-center py-4 px-2 bg-orange-50 w-full">
@@ -75,7 +77,8 @@ export default function DiaryBoard() {
           </div>
         </div>
       ) : (
-        <div className="h-full flex flex-col justify-center items-center">
+        <div className="grow flex flex-col justify-center items-center">
+          <p className="font-semibold mb-2">일기가 없습니다.</p>
           <Link href="/diary/write" className="shadow px-2 py-1 rounded">
             일기 쓰기
           </Link>

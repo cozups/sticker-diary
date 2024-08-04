@@ -34,23 +34,17 @@ export default function Scheduler() {
         </div>
       </div>
       <div id="schedulerBody" className="w-full grow p-4">
-        {isLoading ? (
-          <div className="w-full h-full flex items-center justify-center">
-            loading...
-          </div>
-        ) : (
-          <div className="w-full h-full">
-            {schedules.length ? (
-              schedules.map((schedule) => (
-                <ScheduleCell key={schedule.id} schedule={schedule} />
-              ))
-            ) : (
-              <div className="font-semibold text-center h-full flex flex-col justify-center items-center">
-                스케줄이 없습니다.
-              </div>
-            )}
-          </div>
-        )}
+        <div className="w-full h-full">
+          {schedules.length ? (
+            schedules.map((schedule) => (
+              <ScheduleCell key={schedule.id} schedule={schedule} />
+            ))
+          ) : (
+            <div className="font-semibold text-center h-full flex flex-col justify-center items-center">
+              스케줄이 없습니다.
+            </div>
+          )}
+        </div>
       </div>
       <Link
         href={'/schedule/add'}

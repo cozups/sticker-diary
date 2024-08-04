@@ -1,6 +1,7 @@
 import { prisma } from '@/app/lib/prisma';
+import { formatDate } from '@/app/utils';
 import { auth } from '@/auth';
-import { endOfMonth, startOfMonth, format } from 'date-fns';
+import { endOfMonth, startOfMonth, subDays, addDays } from 'date-fns';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -12,10 +13,8 @@ export async function GET(req: NextRequest) {
   if (!session) return;
 
   if (date) {
-    const dateFormat = 'yyyy-MM-dd';
-
-    const gteString = new Date(format(startOfMonth(date), dateFormat));
-    const lteString = new Date(format(endOfMonth(date), dateFormat));
+    const gteString = new Date(formatDate(subDays(startOfMonth(date), 7)));
+    const lteString = new Date(formatDate(addDays(endOfMonth(date), 7)));
     const schedules = await prisma.schedule.findMany({
       where: {
         userId: session.user.email as string,

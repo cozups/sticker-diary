@@ -24,7 +24,7 @@ export default function RootLayout({
         <SessionWrapper>
           <RecoilWrapper>
             <SiteHeader />
-            <div className="grow flex flex-col justify-center px-8 py-4">
+            <div className="grow flex flex-col justify-center px-8 py-4 relative">
               {children}
             </div>
             <SiteFooter />
