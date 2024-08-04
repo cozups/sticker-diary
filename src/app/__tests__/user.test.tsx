@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Join from '../(auth)/join/page';
+import Join from '@/app/(auth)/join/page';
+import LoginPage from '@/app/(auth)/login/page';
+import Profile from '../profile/page';
 
 jest.mock('next/navigation', () => ({
   useRouter() {
@@ -11,12 +13,16 @@ jest.mock('next/navigation', () => ({
   },
 }));
 
-describe('User Join', () => {
+describe('User 회원가입', () => {
   beforeEach(() => {
     global.fetch = jest.fn();
   });
+
   test('Join 페이지 렌더링', () => {
     render(<Join />);
+
+    const formTitle = screen.getByRole('heading');
+    expect(formTitle).toBeInTheDocument();
 
     const usernameInput = screen.getByLabelText('Username');
     expect(usernameInput).toBeInTheDocument();
@@ -29,9 +35,16 @@ describe('User Join', () => {
 
     const confirmPasswordInput = screen.getByLabelText('Confirm Password');
     expect(confirmPasswordInput).toBeInTheDocument();
+
+    const submitButton = screen.getByRole('button', {
+      value: {
+        text: '가입하기',
+      },
+    });
+    expect(submitButton).toBeInTheDocument();
   });
 
-  test('Join Form 정상 입력', async () => {
+  test('Join Form 정상 입력 - 에러 메시지가 렌더링 되지 않음, submit 이벤트 발생', async () => {
     render(<Join />);
 
     const usernameInput = screen.getByLabelText('Username');
@@ -45,6 +58,9 @@ describe('User Join', () => {
 
     const submitButton = screen.getByText('Sign Up');
     await userEvent.click(submitButton);
+
+    const errorMessages = screen.queryAllByRole('paragraph');
+    expect(errorMessages.length).toBe(0);
 
     // test function call
     expect(global.fetch).toHaveBeenCalledWith('/api/auth/signup', {
@@ -60,7 +76,7 @@ describe('User Join', () => {
     });
   });
 
-  test('Join Form 비정상 입력', async () => {
+  test('Join Form 비정상 입력 - 에러 메시지 렌더링, submit 이벤트 발생하지 않음', async () => {
     render(<Join />);
 
     const wrongForms = [
@@ -142,11 +158,10 @@ describe('User Join', () => {
       await userEvent.type(confirmPasswordInput, form.confirmPassword);
       await userEvent.click(submitButton);
 
+      const errorMessages = screen.queryAllByRole('paragraph');
+      expect(errorMessages.length).not.toBe(0);
+
       expect(global.fetch).not.toHaveBeenCalled();
     });
   });
 });
-
-describe('User Login', () => {});
-
-describe('User Profile', () => {});

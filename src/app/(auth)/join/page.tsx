@@ -55,7 +55,11 @@ export default function Join() {
             id="username"
             {...register('username', { required: true })}
           />
-          {errors.username && <p id="username-error">Username is required.</p>}
+          {errors.username && (
+            <p id="username-error" className="error-message">
+              Username is required.
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col my-3 w-full">
@@ -67,7 +71,9 @@ export default function Join() {
             {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
           />
           {errors.email && (
-            <p id="email-error">Email is required and must include @.</p>
+            <p id="email-error" className="error-message">
+              Email is required and must include @.
+            </p>
           )}
         </div>
 
@@ -81,7 +87,7 @@ export default function Join() {
             {...register('password', { required: true, minLength: 6 })}
           />
           {errors.password && (
-            <p id="password-error">
+            <p id="password-error" className="error-message">
               Password is required and must be at least 6 characters long.
             </p>
           )}
@@ -101,7 +107,9 @@ export default function Join() {
             })}
           />
           {errors.confirmPassword && (
-            <p id="confirmPassword-error">{errors.confirmPassword.message}</p>
+            <p id="confirmPassword-error" className="error-message">
+              {errors.confirmPassword.message}
+            </p>
           )}
         </div>
 
@@ -109,7 +117,7 @@ export default function Join() {
           customStyle="bg-gray-100 w-full hover:bg-gray-200 transition-color ease-in duration-100"
           type="submit"
         >
-          Sign Up
+          가입하기
         </Button>
       </div>
     </form>

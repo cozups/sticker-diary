@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import CustomSticker from '../components/CustomSticker';
 import { auth } from '@/auth';
