@@ -1,10 +1,12 @@
 import Image from 'next/image';
+import { RefObject } from 'react';
 
 interface RoundImageProps {
   src: string;
   alt: string;
   width: number;
   height: number;
+  ref?: RefObject<HTMLImageElement>;
 }
 
 export default function RoundImage({

@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRef, useState } from 'react';
 import { MdOutlinePhotoFilter } from 'react-icons/md';
+import RoundImage from '@/app/components/UI/RoundImage';
+import StyledInput from '@/app/components/UI/StyledInput';
 
 interface EditFormInput {
   image?: string;
@@ -100,7 +102,7 @@ export default function Edit() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col justify-center items-center"
+      className="flex flex-col justify-center items-center shadow p-8 rounded-xl"
     >
       <div className="cursor-pointer rounded-full w-32 h-32 overflow-hidden edit-image relative">
         <div
@@ -109,13 +111,12 @@ export default function Edit() {
         >
           <MdOutlinePhotoFilter color="white" className="w-1/3 h-1/3" />
         </div>
-        <Image
+        <RoundImage
           src={imageSrc}
           alt="profile"
           width={500}
           height={500}
           ref={imageRef}
-          className="w-auto h-full object-cover"
         />
         <input
           type="file"
@@ -126,13 +127,12 @@ export default function Edit() {
         />
       </div>
 
-      <div className="flex flex-col justify-center items-start">
-        <label htmlFor="username" className="font-bold">
+      <div className="flex flex-col justify-center items-start my-8">
+        <label htmlFor="username" className="font-semibold text-gray-400">
           이름
         </label>
-        <input
+        <StyledInput
           id="username"
-          className="border"
           {...register('username', { value: session?.user?.name || '' })}
         />
       </div>
