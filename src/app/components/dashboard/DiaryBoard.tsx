@@ -58,9 +58,10 @@ export default function DiaryBoard() {
               <span>{diary.expression}</span>
             </div>
           </div>
-          <div className="h-full px-1 py-2 self-start">
-            <p>{diary.contents}</p>
-          </div>
+          <div
+            className="h-full px-1 py-2 self-start"
+            dangerouslySetInnerHTML={{ __html: diary.contents }}
+          ></div>
           <div className="py-2">
             <Link
               href={`/diary/edit?id=${diary.id}`}

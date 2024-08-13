@@ -96,6 +96,18 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(updated.stickers, { status: 201 });
   }
+
+  if (target === 'image') {
+    const formData = await req.formData();
+    const file = formData.get('file') as File;
+    const fileName = `IMG_${createRandomString(10)}`;
+    const objectUrl = await uploadImageToS3(fileName, file);
+
+    return NextResponse.json(
+      { result: 'Upload success.', url: objectUrl },
+      { status: 201 }
+    );
+  }
 }
 
 export async function DELETE(req: NextRequest) {
