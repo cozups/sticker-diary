@@ -20,7 +20,10 @@ export default function Editor({ value, onChange }: EditorProps) {
   };
 
   useEffect(() => {
-    document.getElementById('preview')!.innerHTML = value;
+    const preview = document.getElementById('preview');
+    if (preview) {
+      preview.innerHTML = value;
+    }
   }, [value]);
 
   return (

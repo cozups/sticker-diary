@@ -4,10 +4,10 @@ import Button from '@/app/components/UI/Button';
 import StyledInput from '@/app/components/UI/StyledInput';
 import { Schedule } from '@/app/types';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-export default function EditSchedule() {
+function EditSchedule() {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
   const [schedule, setSchedule] = useState<Schedule>();
@@ -79,5 +79,13 @@ export default function EditSchedule() {
         </Button>
       </div>
     </form>
+  );
+}
+
+export default function EditSchedulePage() {
+  return (
+    <Suspense fallback={<div>loading...</div>}>
+      <EditSchedule />
+    </Suspense>
   );
 }

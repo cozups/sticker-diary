@@ -54,7 +54,9 @@ export default function DiaryBoard() {
       body: JSON.stringify({ id: diary?.id }),
     });
 
-    window.location.reload();
+    if (typeof window !== undefined) {
+      window.location.reload();
+    }
   };
 
   return (

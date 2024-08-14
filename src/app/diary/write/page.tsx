@@ -5,23 +5,28 @@ import { Diary } from '@/app/types';
 import { useRecoilValue } from 'recoil';
 import { dateState } from '@/app/states';
 import { base64ToFile, formatDate } from '@/app/utils';
-import Editor from '@/app/components/diary/Editor';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const Editor = dynamic(() => import('@/app/components/diary/Editor'), {
+  loading: () => <div>Loading Editor...</div>,
+  ssr: false,
+});
 
 export default function WriteDiary() {
   const { register, handleSubmit } = useForm<Diary>();
   const date = useRecoilValue(dateState);
   const [content, setContent] = useState('');
   const router = useRouter();
+  const previewRef = useRef<HTMLDivElement>(null);
 
   const onSubmit: SubmitHandler<Diary> = async (data: Diary) => {
-    if (typeof document !== 'undefined') {
+    if (previewRef.current) {
       const imageNodes: NodeListOf<HTMLImageElement> =
-        document.querySelectorAll('#preview img');
+        previewRef.current.querySelectorAll('img');
       const imageSrcs = Array.from(imageNodes, (img) => img.src);
       const imageFiles = imageSrcs.map((src) => base64ToFile(src, 'file'));
-
       await Promise.all(
         imageFiles.map(async (img, index) => {
           const formData = new FormData();
@@ -30,15 +35,11 @@ export default function WriteDiary() {
             method: 'POST',
             body: formData,
           });
-
           const { url } = await response.json();
-
           imageNodes[index].src = url;
         })
       );
-
-      data.contents = document.getElementById('preview')!.innerHTML;
-
+      data.contents = previewRef.current.innerHTML;
       const response = await fetch('/api/diary', {
         method: 'POST',
         headers: {
@@ -49,7 +50,6 @@ export default function WriteDiary() {
           date: new Date(formatDate(date.selectedDate)),
         }),
       });
-
       router.push('/dashboard');
     }
   };
@@ -73,7 +73,7 @@ export default function WriteDiary() {
         </div>
         <Editor value={content} onChange={setContent} />
         <button type="submit">작성</button>
-        <div id="preview" className="hidden"></div>
+        <div id="preview" className="hidden" ref={previewRef}></div>
       </form>
     </div>
   );

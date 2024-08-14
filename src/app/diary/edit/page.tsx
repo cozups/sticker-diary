@@ -1,19 +1,25 @@
 'use client';
 
-import Editor from '@/app/components/diary/Editor';
 import { Diary } from '@/app/types';
 import { base64ToFile } from '@/app/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import dynamic from 'next/dynamic';
 
-export default function EditDiary() {
+const Editor = dynamic(() => import('@/app/components/diary/Editor'), {
+  loading: () => <div>Loading Editor...</div>,
+  ssr: false,
+});
+
+function EditDiary() {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
   const { register, handleSubmit, setValue } = useForm<Diary>();
   const [contents, setContents] = useState('');
   const [images, setImages] = useState<string[]>([]);
   const router = useRouter();
+  const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchDiary = async () => {
@@ -38,15 +44,13 @@ export default function EditDiary() {
   }, [id, setValue]);
 
   const onSubmit = async (data: Diary) => {
-    if (typeof document !== 'undefined') {
+    if (previewRef.current) {
       const imageNodes: NodeListOf<HTMLImageElement> =
-        document.querySelectorAll('#preview img');
+        previewRef.current.querySelectorAll('#preview img');
       const imageSrcs = Array.from(imageNodes, (img) => img.src);
-
       // find deleted or added images
       const deletedImages = images.filter((src) => !imageSrcs.includes(src));
       const addedImages = imageSrcs.filter((src) => !images.includes(src));
-
       // delete old images
       await Promise.all(
         deletedImages.map(async (src) => {
@@ -61,7 +65,6 @@ export default function EditDiary() {
           });
         })
       );
-
       // add new images
       await Promise.all(
         addedImages.map(async (src) => {
@@ -71,16 +74,12 @@ export default function EditDiary() {
             method: 'POST',
             body: formData,
           });
-
           const { url } = await response.json();
           const index = imageSrcs.findIndex((imgSrc) => imgSrc === src);
-
           imageNodes[index].src = url;
         })
       );
-
-      data.contents = document.getElementById('preview')!.innerHTML;
-
+      data.contents = previewRef.current.innerHTML;
       const response = await fetch('/api/diary', {
         method: 'PATCH',
         headers: {
@@ -88,7 +87,6 @@ export default function EditDiary() {
         },
         body: JSON.stringify({ ...data, id }),
       });
-
       router.push('/dashboard');
     }
   };
@@ -112,7 +110,15 @@ export default function EditDiary() {
       <Editor value={contents} onChange={setContents} />
 
       <button type="submit">작성</button>
-      <div id="preview" className="hidden"></div>
+      <div id="preview" className="hidden" ref={previewRef}></div>
     </form>
+  );
+}
+
+export default function EditDiaryPage() {
+  return (
+    <Suspense fallback={<div>loading...</div>}>
+      <EditDiary />
+    </Suspense>
   );
 }
