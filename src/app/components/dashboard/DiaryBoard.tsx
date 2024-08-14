@@ -11,18 +11,41 @@ import RoundImage from '../UI/RoundImage';
 
 export default function DiaryBoard() {
   const [diary, setDiary] = useState<Diary | null>(null);
+  const [images, setImages] = useState<string[]>([]);
   const { selectedDate } = useRecoilValue(dateState);
   const diaries = useRecoilValue(diaryState);
   const { data: session } = useSession();
-
   useEffect(() => {
     if (diaries) {
       const diaryOfToday = diaries.get(formatDate(selectedDate)) || null;
       setDiary(diaryOfToday);
+
+      if (diaryOfToday) {
+        // find image source
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(diaryOfToday.contents, 'text/html');
+        const imageNodes: NodeListOf<HTMLImageElement> =
+          doc.querySelectorAll('img');
+        setImages(Array.from(imageNodes, (img) => img.src));
+      }
     }
   }, [selectedDate, diaries]);
 
   const onClickDelete = async () => {
+    await Promise.all(
+      images.map(async (img) => {
+        await fetch('/api/images', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            url: img,
+          }),
+        });
+      })
+    );
+
     const response = await fetch('/api/diary', {
       method: 'DELETE',
       headers: {
@@ -30,6 +53,8 @@ export default function DiaryBoard() {
       },
       body: JSON.stringify({ id: diary?.id }),
     });
+
+    window.location.reload();
   };
 
   return (
