@@ -38,57 +38,59 @@ export default function EditDiary() {
   }, [id, setValue]);
 
   const onSubmit = async (data: Diary) => {
-    const imageNodes: NodeListOf<HTMLImageElement> =
-      document.querySelectorAll('#preview img');
-    const imageSrcs = Array.from(imageNodes, (img) => img.src);
+    if (typeof document !== 'undefined') {
+      const imageNodes: NodeListOf<HTMLImageElement> =
+        document.querySelectorAll('#preview img');
+      const imageSrcs = Array.from(imageNodes, (img) => img.src);
 
-    // find deleted or added images
-    const deletedImages = images.filter((src) => !imageSrcs.includes(src));
-    const addedImages = imageSrcs.filter((src) => !images.includes(src));
+      // find deleted or added images
+      const deletedImages = images.filter((src) => !imageSrcs.includes(src));
+      const addedImages = imageSrcs.filter((src) => !images.includes(src));
 
-    // delete old images
-    await Promise.all(
-      deletedImages.map(async (src) => {
-        await fetch('/api/images', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            url: src,
-          }),
-        });
-      })
-    );
+      // delete old images
+      await Promise.all(
+        deletedImages.map(async (src) => {
+          await fetch('/api/images', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              url: src,
+            }),
+          });
+        })
+      );
 
-    // add new images
-    await Promise.all(
-      addedImages.map(async (src) => {
-        const formData = new FormData();
-        formData.append('file', base64ToFile(src, 'file'));
-        const response = await fetch('/api/images?target=image', {
-          method: 'POST',
-          body: formData,
-        });
+      // add new images
+      await Promise.all(
+        addedImages.map(async (src) => {
+          const formData = new FormData();
+          formData.append('file', base64ToFile(src, 'file'));
+          const response = await fetch('/api/images?target=image', {
+            method: 'POST',
+            body: formData,
+          });
 
-        const { url } = await response.json();
-        const index = imageSrcs.findIndex((imgSrc) => imgSrc === src);
+          const { url } = await response.json();
+          const index = imageSrcs.findIndex((imgSrc) => imgSrc === src);
 
-        imageNodes[index].src = url;
-      })
-    );
+          imageNodes[index].src = url;
+        })
+      );
 
-    data.contents = document.getElementById('preview')!.innerHTML;
+      data.contents = document.getElementById('preview')!.innerHTML;
 
-    const response = await fetch('/api/diary', {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ ...data, id }),
-    });
+      const response = await fetch('/api/diary', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...data, id }),
+      });
 
-    router.push('/dashboard');
+      router.push('/dashboard');
+    }
   };
 
   return (

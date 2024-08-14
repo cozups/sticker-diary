@@ -16,40 +16,42 @@ export default function WriteDiary() {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<Diary> = async (data: Diary) => {
-    const imageNodes: NodeListOf<HTMLImageElement> =
-      document.querySelectorAll('#preview img');
-    const imageSrcs = Array.from(imageNodes, (img) => img.src);
-    const imageFiles = imageSrcs.map((src) => base64ToFile(src, 'file'));
+    if (typeof document !== 'undefined') {
+      const imageNodes: NodeListOf<HTMLImageElement> =
+        document.querySelectorAll('#preview img');
+      const imageSrcs = Array.from(imageNodes, (img) => img.src);
+      const imageFiles = imageSrcs.map((src) => base64ToFile(src, 'file'));
 
-    await Promise.all(
-      imageFiles.map(async (img, index) => {
-        const formData = new FormData();
-        formData.append('file', img);
-        const response = await fetch('/api/images?target=image', {
-          method: 'POST',
-          body: formData,
-        });
+      await Promise.all(
+        imageFiles.map(async (img, index) => {
+          const formData = new FormData();
+          formData.append('file', img);
+          const response = await fetch('/api/images?target=image', {
+            method: 'POST',
+            body: formData,
+          });
 
-        const { url } = await response.json();
+          const { url } = await response.json();
 
-        imageNodes[index].src = url;
-      })
-    );
+          imageNodes[index].src = url;
+        })
+      );
 
-    data.contents = document.getElementById('preview')!.innerHTML;
+      data.contents = document.getElementById('preview')!.innerHTML;
 
-    const response = await fetch('/api/diary', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...data,
-        date: new Date(formatDate(date.selectedDate)),
-      }),
-    });
+      const response = await fetch('/api/diary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...data,
+          date: new Date(formatDate(date.selectedDate)),
+        }),
+      });
 
-    router.push('/dashboard');
+      router.push('/dashboard');
+    }
   };
 
   return (
