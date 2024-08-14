@@ -7,11 +7,13 @@ import { dateState } from '@/app/states';
 import { base64ToFile, formatDate } from '@/app/utils';
 import Editor from '@/app/components/diary/Editor';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function WriteDiary() {
   const { register, handleSubmit } = useForm<Diary>();
   const date = useRecoilValue(dateState);
   const [content, setContent] = useState('');
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<Diary> = async (data: Diary) => {
     const imageNodes: NodeListOf<HTMLImageElement> =
@@ -46,6 +48,8 @@ export default function WriteDiary() {
         date: new Date(formatDate(date.selectedDate)),
       }),
     });
+
+    router.push('/dashboard');
   };
 
   return (
