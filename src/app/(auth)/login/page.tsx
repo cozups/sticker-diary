@@ -3,6 +3,7 @@
 import Button from '@/app/components/UI/Button';
 import StyledInput from '@/app/components/UI/StyledInput';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 interface LoginFormInput {
@@ -16,20 +17,29 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInput>();
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<LoginFormInput> = async (
     data: LoginFormInput
   ) => {
-    const res = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      callbackUrl: '/',
-    });
+    try {
+      const res = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        callbackUrl: '/dashboard',
+        redirect: false,
+      });
 
-    // if (res?.error) {
-    //   // login failed.
-    //   console.error(res.error);
-    // }
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
+      if (res && res.url) {
+        router.replace(res.url);
+      }
+    } catch (error) {
+      alert('로그인에 실패했습니다. 이메일/패스워드를 정확하게 입력해주세요.');
+    }
   };
 
   const onGoogleLogin = () => {

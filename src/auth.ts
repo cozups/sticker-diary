@@ -1,9 +1,8 @@
-import NextAuth, { NextAuthConfig } from 'next-auth';
+import NextAuth, { AuthError, NextAuthConfig } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import { prisma } from '@/app/lib/prisma';
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import { Prisma } from '@prisma/client';
 
 export const authOptions: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
@@ -28,21 +27,26 @@ export const authOptions: NextAuthConfig = {
           password: string;
         };
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email,
-          },
-        });
+        const response = await fetch(
+          `${process.env.NEXTAUTH_URL}/api/auth/login`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email,
+              password,
+            }),
+          }
+        );
 
-        if (!user) {
-          throw new Error('User Not Found');
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to authenticate');
         }
 
-        // const isMatch = await bcrypt.compare(password, user.password);
-
-        // if (!isMatch) {
-        //   throw new Error('Password is wrong.');
-        // }
+        const { user } = await response.json();
 
         return {
           id: user.id,
