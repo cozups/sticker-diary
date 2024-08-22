@@ -1,10 +1,9 @@
-import { String } from 'aws-sdk/clients/cloudwatchevents';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 interface EditorProps {
-  value: String;
+  value: string;
   onChange: Dispatch<SetStateAction<string>>;
 }
 
