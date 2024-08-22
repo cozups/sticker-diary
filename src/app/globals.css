@@ -5,3 +5,7 @@
 .error-message {
   @apply text-red-400 text-sm;
 }
+
+.ql-editor {
+  @apply !h-96 overflow-y-scroll;
+}
